@@ -11,11 +11,35 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
+    {
+        dd($request->query('users'));
+        $users = User::with('roles')->get();
+        $usersWithNoGuest = array_filter($users->toArray(), function ($user) {
+            foreach($user['roles'] as $role) {
+                if (in_array('super-admin', $role) || in_array('admin', $role)) {
+                    return $user;
+                }
+            }
+        });
+        return Inertia::render('Dashboard/Admin/User/Index', [
+            'users' => array_values($usersWithNoGuest)
+        ]);
+    }
+
+    public function indexGuest()
     {
         $users = User::with('roles')->get();
-        return Inertia::render('Dashboard/Admin/User/Index', [
-            'users' => $users
+        $guests = array_filter($users->toArray(), function ($user) {
+            foreach($user['roles'] as $role) {
+                if (in_array('guest', $role)) {
+                    return $user;
+                }
+            }
+        });
+
+        return Inertia::render('Dashboard/Admin/User/IndexGuest', [
+            'users' => array_values($guests)
         ]);
     }
 

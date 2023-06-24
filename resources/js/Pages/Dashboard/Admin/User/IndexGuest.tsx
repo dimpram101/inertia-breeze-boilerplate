@@ -11,13 +11,11 @@ interface Props {
   users: Array<User>
 }
 
-const Index = ({ users }: Props) => {
+const IndexGuest = ({ users }: Props) => {
   console.log(users);
   const [modal, dispatch] = useModal();
   const form = useForm();
   const page = usePage();
-
-  console.log(modal);
 
   const deleteUserHandler = () => {
     dispatch({ type: "CLOSE", payload: null });
@@ -93,4 +91,4 @@ const Index = ({ users }: Props) => {
   )
 }
 
-export default Index
+export default IndexGuest
