@@ -17,8 +17,6 @@ const Index = ({ users }: Props) => {
   const form = useForm();
   const page = usePage();
 
-  console.log(modal);
-
   const deleteUserHandler = () => {
     dispatch({ type: "CLOSE", payload: null });
   }
@@ -77,7 +75,9 @@ const Index = ({ users }: Props) => {
           renderRowActions={({ row }) => (
             <div className='flex gap-2'>
               <LinkButton href={route('user.show', row.original.id)} label='Show' />
-              <LinkButton href={route('user.edit', row.original.id)} label='Edit' className='bg-orange-400 hover:bg-orange-500' />
+              {['super-admin', 'admin'].some(e => row.original.roles?.map(role => role.name).join(', ').includes(e)) &&
+                <LinkButton href={route('user.edit', row.original.id)} label='Edit' className='bg-orange-400 hover:bg-orange-500' />
+              }
               <button className='px-4 py-2 text-white rounded-lg font-bold bg-red-500 hover:bg-red-600' onClick={() => dispatch({ type: "OPEN", payload: row.original.id })}>Delete</button>
               {/* {userId !== row.original.id &&
                 <button className='px-4 py-2 text-white rounded-lg font-bold bg-red-500 hover:bg-red-600' onClick={() => {
