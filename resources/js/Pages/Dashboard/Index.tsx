@@ -1,12 +1,12 @@
 import DashboardLayout from '@/Layouts/DashboardLayout'
 import React from 'react'
 
-const Test = () => {
+const Index = () => {
   return (
     <DashboardLayout>
-      <div className="text-7xl">RFadaw</div>
+      <div className="text-3xl">Welcome To Dashboard</div>
     </DashboardLayout>
   )
 }
 
-export default Test
+export default Index
