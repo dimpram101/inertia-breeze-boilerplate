@@ -6,6 +6,7 @@ import { useForm, usePage } from '@inertiajs/react';
 import { Dialog, DialogContent } from "@mui/material";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import useModal from '@/Hooks/useModal';
+import Loading from '@/Components/Loading';
 
 interface Props {
   users: Array<User>
@@ -19,6 +20,7 @@ const Index = ({ users }: Props) => {
 
   const deleteUserHandler = () => {
     dispatch({ type: "CLOSE", payload: null });
+    form.delete(route('user.destroy', modal.id));
   }
 
   const dataColumns = useMemo(() =>
@@ -57,8 +59,11 @@ const Index = ({ users }: Props) => {
       </Dialog>
 
       <div className="flex flex-row justify-between items-center w-full">
-        <h1 className='font-bold text-3xl'>Users</h1>
-        <LinkButton href={route('user.create')} >Add User</LinkButton>
+        <div className="flex flex-row items-center gap-2">
+          <h1 className='font-bold text-3xl'>Users</h1>
+          {form.processing && <Loading color='black' className='w-8'/>}
+        </div>
+        <LinkButton href={route('user.create')} className='font-bold'>Add User</LinkButton>
       </div>
       <div className="w-full mt-2 shadow-md">
         <MaterialReactTable
@@ -74,7 +79,7 @@ const Index = ({ users }: Props) => {
           positionActionsColumn='last'
           renderRowActions={({ row }) => (
             <div className='flex gap-2'>
-              <LinkButton href={route('user.show', row.original.id)}>Show</LinkButton>
+              <LinkButton href={route('user.show', row.original.id)} className='font-bold'>Show</LinkButton>
               {/* {!row.original.roles?.map(role => role.name).join(', ').includes('guest') &&
                 <LinkButton href={route('user.edit', row.original.id)} label='Edit' className='bg-orange-400 hover:bg-orange-500' />
               } */}
