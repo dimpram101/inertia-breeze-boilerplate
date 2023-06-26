@@ -25,9 +25,9 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
+                <h2 className="text-xl font-bold text-gray-900">Profile Information</h2>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-gray-600">
                     Update your account's profile information and email address.
                 </p>
             </header>
@@ -80,7 +80,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         </p>
 
                         {status === 'verification-link-sent' && (
-                            <div className="mt-2 font-medium text-sm text-green-600">
+                            <div className="mt-2 font-bold text-sm text-green-600">
                                 A new verification link has been sent to your email address.
                             </div>
                         )}
@@ -88,7 +88,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                 )}
 
                 <div className="flex items-center gap-4">
-                    <Button type='submit' disabled={processing}>Save</Button>
+                    <Button className='px-7 text-base' type='submit' disabled={processing}>Save</Button>
 
                     <Transition
                         show={recentlySuccessful}
