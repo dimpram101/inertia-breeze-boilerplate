@@ -30,7 +30,9 @@ Route::get('/', function () {
 Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', fn () => Inertia::render('Dashboard/Index'))->name('dashboard');
 
-    Route::resource('/user', UserController::class);
+    Route::middleware(['role:super-admin'])->group(function () {
+        Route::resource('/user', UserController::class);
+    });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
