@@ -2,40 +2,44 @@ import Button from '@/Components/Button'
 import InputText from '@/Components/InputText'
 import Loading from '@/Components/Loading'
 import DashboardLayout from '@/Layouts/DashboardLayout'
-import { Roles } from '@/types'
+import { Roles, User } from '@/types'
 import { useForm } from '@inertiajs/react'
 import React, { useMemo } from 'react'
 import Select from "react-select";
 
 interface Props {
-  roles: Array<Roles>
+  user: User,
+  roles: Roles[],
 }
 
-const Create = ({ roles }: Props) => {
+const Edit = ({ user, roles }: Props) => {
   const form = useForm({
-    name: '',
-    email: '',
-    phone_number: '',
-    roles: [],
+    name: user.name || '',
+    email: user.email || '',
+    phone_number: user.phone_number || '',
+    roles: user.roles || [],
+    current_password: '',
     password: '',
     confirm_password: '',
   });
 
-  const isPasswordMatched = useMemo(() => (form.data.password !== "" && form.data.confirm_password !== "") && form.data.password === form.data.confirm_password, [form.data.password, form.data.confirm_password]);
+  const userRoles = useMemo(() => roles?.filter((role: Roles) => role.name !== 'guest'), []);
+
+  const isPasswordMatched = useMemo(() => form.data.password === form.data.confirm_password, [form.data.password, form.data.confirm_password]);
 
   const canSubmit = (form.data.name !== "" && form.data.email !== "" && form.data.phone_number !== "" && form.data.roles.length > 0) && (isPasswordMatched);
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(form.data);
-    form.post(route('user.store'), {
+    form.put(route('user.update', user.id), {
       onFinish: () => form.reset('password', 'confirm_password')
     });
   }
 
   return (
     <DashboardLayout>
-      <h1 className='text-center font-bold text-2xl'>Create</h1>
+      <h1 className='text-center font-bold text-2xl'>Edit - <span className='text-primary'>{user.name}</span></h1>
       <div className="mt-4 w-[800px] mx-auto bg-white shadow-md p-4">
         <form onSubmit={onSubmitHandler}>
           <div className="flex flex-col gap-1 font-semibold mb-3">
@@ -45,7 +49,7 @@ const Create = ({ roles }: Props) => {
           </div>
           <div className="flex flex-col gap-1 font-semibold mb-3">
             <label>Email</label>
-            <InputText value={form.data.email} onChange={(e) => form.setData('email', e.target.value)} type='email' placeholder='johndoe@example.com' />
+            <InputText value={form.data.email} className='cursor-not-allowed' onChange={(e) => form.setData('email', e.target.value)} type='email' placeholder='johndoe@example.com' disabled/>
             {form.errors.email && (<p className='text-xs text-red-500 font-thin'>{form.errors.email}</p>)}
           </div>
           <div className="flex flex-col gap-1 font-semibold mb-3">
@@ -58,12 +62,13 @@ const Create = ({ roles }: Props) => {
             <Select
               isMulti
               //@ts-ignore
-              options={roles}
+              options={userRoles}
               //@ts-ignore
               getOptionLabel={it => it.name}
               //@ts-ignore
               getOptionValue={it => it.id.toString()}
               value={form.data.roles}
+              //@ts-ignore
               onChange={(value) => form.setData('roles', value.concat())}
               className='border border-primary rounded-md'
               styles={{
@@ -82,12 +87,12 @@ const Create = ({ roles }: Props) => {
           </div>
           <div className="flex flex-col gap-1 font-semibold mb-3">
             <label>Password</label>
-            <InputText value={form.data.password} onChange={(e) => form.setData('password', e.target.value)} type='password' placeholder='Password' className={(form.data.confirm_password && !isPasswordMatched) ? "border-red-500 focus:ring-1 focus:border-red-500 focus:ring-red-500 focus:outline-none" : ""}/>
+            <InputText value={form.data.password} onChange={(e) => form.setData('password', e.target.value)} type='password' placeholder='Password' className={(form.data.confirm_password && !isPasswordMatched) ? "border-red-500 focus:ring-1 focus:border-red-500 focus:ring-red-500 focus:outline-none" : ""} />
             {form.errors.password && (<p className='text-xs text-red-500 font-thin'>{form.errors.password}</p>)}
           </div>
           <div className="flex flex-col gap-1 font-semibold mb-3">
             <label>Confirm Password</label>
-            <InputText value={form.data.confirm_password} onChange={(e) => form.setData('confirm_password', e.target.value)} type='password' placeholder='Confirm Password' className={(form.data.confirm_password && !isPasswordMatched) ? "border-red-500 focus:ring-1 focus:border-red-500 focus:ring-red-500 focus:outline-none" : ""}/>
+            <InputText value={form.data.confirm_password} onChange={(e) => form.setData('confirm_password', e.target.value)} type='password' placeholder='Confirm Password' className={(form.data.confirm_password && !isPasswordMatched) ? "border-red-500 focus:ring-1 focus:border-red-500 focus:ring-red-500 focus:outline-none" : ""} required={form.data.password ? true : false} />
             {form.errors.confirm_password && (<p className='text-xs text-red-500 font-thin'>{form.errors.confirm_password}</p>)}
           </div>
           <div className="flex flex-col text-center font-bold">
@@ -105,4 +110,4 @@ const Create = ({ roles }: Props) => {
   )
 }
 
-export default Create
+export default Edit

@@ -3,10 +3,7 @@ import { User } from '@/types'
 import Select from "react-select";
 import React, { useMemo } from 'react'
 import InputText from '@/Components/InputText';
-import Button from '@/Components/Button';
-import Loading from '@/Components/Loading';
 import LinkButton from '@/Components/LinkButton';
-import { Link } from '@inertiajs/react';
 
 interface Props {
   user: User
@@ -14,7 +11,6 @@ interface Props {
 
 const Show = ({ user }: Props) => {
   const userRoles = useMemo(() => user.roles?.map(role => role.name), [user]);
-  console.log(userRoles?.includes('guest'));
   
   return (
     <DashboardLayout>

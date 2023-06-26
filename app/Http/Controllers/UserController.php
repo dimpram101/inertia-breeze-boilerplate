@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -71,7 +73,12 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::with('roles')->find($id);
+        $roles = Role::all();
+        return Inertia::render('Dashboard/Admin/User/Edit', [
+            'user' => $user,
+            'roles' => $roles
+        ]);
     }
 
     /**
@@ -79,7 +86,50 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:4|string',
+            'email' => 'required|email|string',
+            'phone_number' => 'required|string|min:11',
+            'roles*.name' => 'required',
+            'password' => 'nullable|string|min:8',
+            'confirm_password' => 'nullable|min:8|same:password'
+        ]);
+
+        DB::transaction(function () use ($request, $id) {
+            $user = User::with('roles')->find($id);
+    
+            if (isset($request->password)) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number
+            ]);
+            $roles = [];
+            foreach($request->roles as $role) {
+                array_push($roles, $role['name']);
+            }
+
+            $user->syncRoles($roles);
+            $user->save();
+        });
+        return redirect()->route('user.index')->with('message', 'User updated!');
+    }
+
+    public function guestUpdate(Request $request, string $id) {
+        $request->validate([
+            'name' => 'required|min:4|string',
+            'email' => 'required|email|string',
+            'phone_number' => 'required|string|min:11',
+            'roles*.name' => 'required',
+            'current_password' => 'nullable|string|min:8',
+            'password' => 'required|string|min:8',
+            'confirm_password' => 'required|min:8|same:password'
+        ]);
+
+        $user = User::find($id);
     }
 
     /**
