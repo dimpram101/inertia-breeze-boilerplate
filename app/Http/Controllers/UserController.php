@@ -60,7 +60,10 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::with('roles')->find($id);
+        return Inertia::render('Dashboard/Admin/User/Show', [
+            'user' => $user
+        ]);
     }
 
     /**

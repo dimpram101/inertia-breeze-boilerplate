@@ -13,7 +13,6 @@ interface Props {
 }
 
 const Index = ({ users }: Props) => {
-  console.log(users);
   const [modal, dispatch] = useModal();
   const form = useForm();
   const page = usePage();
