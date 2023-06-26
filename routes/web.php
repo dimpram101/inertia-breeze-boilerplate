@@ -28,7 +28,7 @@ Route::get('/', function () {
 
 
 Route::prefix('dashboard')->group(function () {
-    Route::get('/', fn () => Inertia::render('Dashboard/Index'));
+    Route::get('/', fn () => Inertia::render('Dashboard/Index'))->name('dashboard');
 
     Route::resource('/user', UserController::class);
 });

@@ -31,7 +31,6 @@ const Edit = ({ user, roles }: Props) => {
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(form.data);
     form.put(route('user.update', user.id), {
       onFinish: () => form.reset('password', 'confirm_password')
     });

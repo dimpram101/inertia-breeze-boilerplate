@@ -115,7 +115,7 @@ class UserController extends Controller
             $user->syncRoles($roles);
             $user->save();
         });
-        return redirect()->route('user.index')->with('message', 'User updated!');
+        return redirect()->route('user.index')->with('success', 'User updated!');
     }
 
     public function guestUpdate(Request $request, string $id) {

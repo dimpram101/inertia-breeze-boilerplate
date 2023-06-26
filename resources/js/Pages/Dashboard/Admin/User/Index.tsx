@@ -9,13 +9,14 @@ import useModal from '@/Hooks/useModal';
 import Loading from '@/Components/Loading';
 
 interface Props {
-  users: Array<User>
+  users: Array<User>,
 }
 
 const Index = ({ users }: Props) => {
   const [modal, dispatch] = useModal();
   const form = useForm();
   const page = usePage();
+  const flash = page.props.flash;
 
   const deleteUserHandler = () => {
     dispatch({ type: "CLOSE", payload: null });
@@ -60,9 +61,15 @@ const Index = ({ users }: Props) => {
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-row items-center gap-2">
           <h1 className='font-bold text-3xl'>Users</h1>
-          {form.processing && <Loading color='black' className='w-8'/>}
+          {form.processing && <Loading color='black' className='w-8' />}
         </div>
-        <LinkButton href={route('user.create')} className='font-bold'>Add User</LinkButton>
+        <div className="flex flex-row items-center gap-2">
+          {
+            //@ts-ignore
+            flash.success && <span className="font-bold text-xl text-primary">{flash.success}</span>
+          }
+          <LinkButton href={route('user.create')} className='font-bold'>Add User</LinkButton>
+        </div>
       </div>
       <div className="w-full mt-2 shadow-md">
         <MaterialReactTable

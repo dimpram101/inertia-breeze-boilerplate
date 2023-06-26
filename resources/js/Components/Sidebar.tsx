@@ -9,8 +9,9 @@ const Sidebar = () => {
       <div className="flex flex-row">
         <div className="h-screen w-64 bg-primary text-complementary shadow-2xl top-0 left-0 pt-16">
           <div className="pt-2 px-3 flex flex-col font-semibold">
+            <Link href={route('dashboard')} className="text-lg px-2 py-2 rounded-lg hover:bg-secondary">Dashboard</Link>
             <div className="text-lg px-2 py-2 rounded-lg hover:bg-secondary">Profile</div>
-            <div className="text-lg px-2 py-2 rounded-lg hover:bg-secondary">Users</div>
+            <Link href={route('user.index')} className="text-lg px-2 py-2 rounded-lg hover:bg-secondary">Users</Link>
             <hr className='mt-1' />
           </div>
           <div className="pt-2 px-3 flex flex-col font-semibold">
