@@ -25,6 +25,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "material-react-table": "^1.14.0"
+        "material-react-table": "^1.14.0",
+        "react-select": "^5.7.3"
     }
 }

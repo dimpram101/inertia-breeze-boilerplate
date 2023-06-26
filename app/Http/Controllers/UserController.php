@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -19,28 +20,16 @@ class UserController extends Controller
         ]);
     }
 
-    public function indexGuest()
-    {
-        $users = User::with('roles')->get();
-        $guests = array_filter($users->toArray(), function ($user) {
-            foreach($user['roles'] as $role) {
-                if (in_array('guest', $role)) {
-                    return $user;
-                }
-            }
-        });
-
-        return Inertia::render('Dashboard/Admin/User/IndexGuest', [
-            'users' => array_values($guests)
-        ]);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+        return Inertia::render('Dashboard/Admin/User/Create', [
+            "roles" => $roles
+        ]);
+        
     }
 
     /**
@@ -48,7 +37,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|min:4|string',
+            'email' => 'required|email|string',
+            'phone_number' => 'required|string|min:11',
+            'roles*.name' => 'required',
+            'password' => 'required|string|min:8',
+            'confirm_password' => 'required|min:8|same:password'
+        ]);
+
+        $users = User::create($validatedData);
+
+        foreach($request->roles as $role) {
+            $users->assignRole($role['name']);
+        }
+        
+        return redirect()->route('user.index');
     }
 
     /**
@@ -80,6 +84,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+
+        $user->delete();
+
+        return redirect()->route('user.index');
     }
 }

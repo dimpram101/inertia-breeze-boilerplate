@@ -31,7 +31,6 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/', fn () => Inertia::render('Dashboard/Index'));
 
     Route::resource('/user', UserController::class);
-    Route::get('/guest', [UserController::class, 'indexGuest'])->name('user.guest');
 });
 
 // Route::get('/dashboard', function () {

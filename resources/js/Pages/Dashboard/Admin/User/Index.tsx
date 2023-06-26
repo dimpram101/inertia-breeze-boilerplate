@@ -58,7 +58,7 @@ const Index = ({ users }: Props) => {
 
       <div className="flex flex-row justify-between items-center w-full">
         <h1 className='font-bold text-3xl'>Users</h1>
-        <LinkButton label='Add User' href={route('user.create')} />
+        <LinkButton href={route('user.create')} >Add User</LinkButton>
       </div>
       <div className="w-full mt-2 shadow-md">
         <MaterialReactTable
@@ -74,10 +74,10 @@ const Index = ({ users }: Props) => {
           positionActionsColumn='last'
           renderRowActions={({ row }) => (
             <div className='flex gap-2'>
-              <LinkButton href={route('user.show', row.original.id)} label='Show' />
-              {['super-admin', 'admin'].some(e => row.original.roles?.map(role => role.name).join(', ').includes(e)) &&
+              <LinkButton href={route('user.show', row.original.id)}>Show</LinkButton>
+              {/* {!row.original.roles?.map(role => role.name).join(', ').includes('guest') &&
                 <LinkButton href={route('user.edit', row.original.id)} label='Edit' className='bg-orange-400 hover:bg-orange-500' />
-              }
+              } */}
               <button className='px-4 py-2 text-white rounded-lg font-bold bg-red-500 hover:bg-red-600' onClick={() => dispatch({ type: "OPEN", payload: row.original.id })}>Delete</button>
               {/* {userId !== row.original.id &&
                 <button className='px-4 py-2 text-white rounded-lg font-bold bg-red-500 hover:bg-red-600' onClick={() => {
