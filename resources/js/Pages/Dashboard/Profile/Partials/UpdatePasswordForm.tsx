@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import Button from '@/Components/Button';
 
 export default function UpdatePasswordForm({ className = '' }: { className?: string }) {
     const passwordInput = useRef<HTMLInputElement>();
@@ -95,7 +96,7 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <Button type='submit' disabled={processing}>Save</Button>
 
                     <Transition
                         show={recentlySuccessful}
